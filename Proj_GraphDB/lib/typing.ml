@@ -73,3 +73,26 @@ let typecheck continue (NormProg(gt, NormQuery instrs) as np) =
                         failwith "stopped"
   | _ -> typecheck_instructions continue gt instrs np
   
+  (* Returns true if list is without duplicates *)
+let rec no_duplicates = function
+  | [] -> true
+  | (x :: xs) -> not (List.mem x xs) && (no_duplicates xs);;
+
+(* verify that types are unique (no duplicate declaration of a type) *)
+let types_unique ntdecls = 
+  no_duplicates (List.map (fun (DBN(n, _)) -> n) ntdecls) 
+
+(* TODO: fill in details *)
+let check_graph_types (DBG (ntdecls, rtdecls)) = 
+     if types_unique ntdecls
+     then Result.Ok () 
+     else Result.Error "duplicates"
+
+(* FAIRE UNE FONCTION POUR VERIFIER QUE LES TYPES DANS DBR SONT BIEN DEFINIS DANS DBN ( GENRE LA LE X EST PAS DEFINI )*)
+
+let test_types =  
+ DBG ([( DBN ("P", [("nom", Lang. StringT ); ("age", Lang.IntT )]));
+       (DBN ("E", [("nom", Lang. StringT ); ("pme", Lang. BoolT )]));] ,
+   [( DBR ("P", "ami", "P"));
+    (DBR ("P", "emp", "X"));
+     (DBR ("E", "f", "E"))]) ;;
