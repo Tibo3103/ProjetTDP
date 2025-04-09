@@ -29,13 +29,31 @@ let normalize_node_pattern act = function
 
 
 let rec normalize_pattern act = function 
-| SimpPattern p -> normalize_node_pattern act p
-| CompPattern (npt, rl, pt) -> failwith "not yet implemented"
+  | SimpPattern p -> 
+      normalize_node_pattern act p
+  | CompPattern (npt, rl, pt) -> 
+      let (npt_var, npt_inst) = normalize_node_pattern act npt in
+      let (pt_var, pt_inst)  = normalize_pattern act pt in
+      let instruction_rel    = IActOnRel (act, npt_var, rl, pt_var) in
+      let instructions       = List.concat [npt_inst; pt_inst; [instruction_rel]] in
+      (pt_var, instructions)
+
 
 let normalize_clause = function
   | Create pats -> 
-    List.concat_map (fun  p -> snd (normalize_pattern CreateAct p)) pats
-  | _ -> []
+      List.concat_map (fun p -> snd (normalize_pattern CreateAct p)) pats
+  | Match pats -> 
+      List.concat_map (fun p -> snd (normalize_pattern MatchAct p)) pats
+  | Delete pats -> 
+      match pats with
+      | DeleteNodes vars -> 
+          List.map (fun v -> IDeleteNode v) vars
+      | DeleteRels rels -> 
+          List.map (fun (v1, lab, v2) -> IDeleteRel (v1, lab, v2)) rels
+  | Return vars -> [IReturn vars]
+  | Set assigns -> 
+      List.map (fun (var, attr, e) -> ISet (var, attr, e)) assigns
+  | Where cond -> [IWhere cond]
 
 let normalize_query (Query cls) = NormQuery (List.concat_map normalize_clause cls)
 
