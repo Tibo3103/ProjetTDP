@@ -28,7 +28,7 @@ Pour exécuter notre projet, il suffit d'exécuter le fichier setup.sh afin de m
 - ❌ Pas de tests `.q` robustes ou vérifiés par `dune runtest`
 - ❌ manque de aucune relation créée entre les variables 
 
-##  Algorithmes ou choix notables
+##  choix notables
 
 - Utilisation d’un environnement typé (`bindings`) qui évolue à chaque instruction
 - Respect du typage structurel des graphes et relations
