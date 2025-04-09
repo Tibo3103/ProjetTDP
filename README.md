@@ -33,7 +33,7 @@ Pour exécuter notre projet, il suffit d'exécuter le fichier setup.sh afin de m
 - Traduction récursive des `pattern` en instructions élémentaires
 - Respect du typage structurel des graphes et relations
 
-## ❗ Limitations actuelles
+##  Limitations actuelles
 
 - Pas de typage réel sur les expressions complexes
 - Impossible pour l’instant d’exécuter un programme MiniGQL complet
