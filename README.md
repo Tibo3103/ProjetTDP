@@ -23,9 +23,10 @@ Pour exécuter notre projet, il suffit d'exécuter le fichier setup.sh afin de m
 ⚠️ Fonctionnalités partiellement ou non implémentées
 
 - ❌ Les instructions `match`, `where`, `set`, `return` ne sont pas encore complètement vérifiées au niveau du typage
-- ❌ Le typage des expressions (`tp_expr`) est partiel : tous les `Const`, `AttribAcc`, `BinOp` sont considérés `IntT` par défaut
+- ❌ Le typage des expressions (`tp_expr`) est  assez partiel : tous les `Const`, `AttribAcc`  sont considérés `IntT` par défaut
 - ❌ L'évaluation (`sem.ml`) n'a pas encore été testée en bout-en-bout
 - ❌ Pas de tests `.q` robustes ou vérifiés par `dune runtest`
+- ❌ manque de aucune relation créée entre les variables 
 
 ##  Algorithmes ou choix notables
 
