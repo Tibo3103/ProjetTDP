@@ -30,7 +30,6 @@ Pour exécuter notre projet, il suffit d'exécuter le fichier setup.sh afin de m
 ##  Algorithmes ou choix notables
 
 - Utilisation d’un environnement typé (`bindings`) qui évolue à chaque instruction
-- Traduction récursive des `pattern` en instructions élémentaires
 - Respect du typage structurel des graphes et relations
 
 ##  Limitations actuelles
