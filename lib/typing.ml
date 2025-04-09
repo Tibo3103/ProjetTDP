@@ -24,7 +24,39 @@ let remove_var vn env =
 (* TODO: add more auxiliary functions here *)
 
 (* TODO: fill in details *)
-let check_graph_types (DBG (ntdecls, rtdecls)) = Result.Ok ()
+let check_graph_types (DBG (node_types, relation_types)) : (db_tp, string list) result =
+  (* Vérifie qu'il n'y a pas de doublon dans les labels de nœuds *)
+  let rec check_duplicates nodes seen errors =
+    match nodes with
+    | [] -> errors
+    | DBN (label, _) :: rest ->
+        if List.mem label seen then
+          check_duplicates rest seen (errors @ [Printf.sprintf "Duplicate node type declaration: %s" label])
+        else
+          check_duplicates rest (label :: seen) errors
+  in
+  let errors1 = check_duplicates node_types [] [] in
+
+  (* Vérifie pour chaque relation que le type source et le type cible existent *)
+  let errors2 =
+    List.fold_left (fun errs (DBR (src, rel, tgt)) ->
+      let src_exists = List.exists (fun (DBN (label, _)) -> label = src) node_types in
+      let tgt_exists = List.exists (fun (DBN (label, _)) -> label = tgt) node_types in
+      let errs =
+        if not src_exists then errs @ [Printf.sprintf "Relation '%s': source type '%s' not declared" rel src] else errs
+      in
+      if not tgt_exists then
+        errs @ [Printf.sprintf "Relation '%s': target type '%s' not declared" rel tgt]
+      else errs
+    ) [] relation_types
+  in
+
+  let all_errors = errors1 @ errors2 in
+  if all_errors = [] then Result.Ok (DBG (node_types, relation_types))
+  else Result.Error all_errors
+
+
+
 
 (* TODO: fill in details *)
 let rec tp_expr env = function
@@ -64,12 +96,13 @@ let typecheck_instructions continue gt instrs np =
   |_ -> np
   
 
+  
   (* Typecheck program; 
      If continue is true, continue typechecking even 
      when errors have been discovered (can be ignored in a first version) *)  
 let typecheck continue (NormProg(gt, NormQuery instrs) as np) = 
   match check_graph_types gt with
-  | Result.Error egt -> Printf.printf "%s\n" ("Undeclared types in\n" ^ egt);
-                        failwith "stopped"
-  | _ -> typecheck_instructions continue gt instrs np
-  
+    | Result.Error egt -> Printf.printf "%s\n" ("Undeclared types in\n" ^ egt);
+                            failwith "stopped"
+    | _ -> typecheck_instructions continue gt instrs np
+      
