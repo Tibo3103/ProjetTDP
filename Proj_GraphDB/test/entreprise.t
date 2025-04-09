@@ -1,4 +1,4 @@
-  $ dune exec Code_GraphDB f entreprise.q
+  $ dune exec Proj_GraphDB f entreprise.q
   (Graphstruct.DBG (
      [(Graphstruct.DBN (3,
          ("E",

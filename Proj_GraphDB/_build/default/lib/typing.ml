@@ -88,9 +88,11 @@ let check_graph_types (DBG (ntdecls, rtdecls)) =
      then Result.Ok () 
      else Result.Error "duplicates"
 
+(* FAIRE UNE FONCTION POUR VERIFIER QUE LES TYPES DANS DBR SONT BIEN DEFINIS DANS DBN ( GENRE LA LE X EST PAS DEFINI )*)
+
 let test_types =  
  DBG ([( DBN ("P", [("nom", Lang. StringT ); ("age", Lang.IntT )]));
-       (DBN ("E", [("nom", Lang. StringT ); ("pme", Lang. BoolT )]))] ,
+       (DBN ("E", [("nom", Lang. StringT ); ("pme", Lang. BoolT )]));] ,
    [( DBR ("P", "ami", "P"));
-    (DBR ("P", "emp", "E"));
+    (DBR ("P", "emp", "X"));
      (DBR ("E", "f", "E"))]) ;;

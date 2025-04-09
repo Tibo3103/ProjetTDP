@@ -40,15 +40,33 @@ query: cls = list(clause) { Query cls }
 /* TODO: to be completed */
 clause: 
 | CREATE; pts = separated_list(COMMA, pattern) { Create pts }
-
+| DELETE; pts = delete_pattern { Delete pts}
+| MATCH; pts = separated_list(COMMA, pattern) { Match pts }
+| RETURN; v = separated_list(COMMA, IDENTIFIER) { Return v }
+| SET; attr = separated_list(COMMA, attrib_assign_pattern) { Set attr }
+| WHERE; cond = expr { Where cond }
 
 /* TODO: to be completed */
 pattern: 
 | np = npattern { SimpPattern np }
+| np = npattern; SUB; LBRACKET; COLON; lab = IDENTIFIER; RBRACKET; ARROW; p = pattern { CompPattern(np, lab, p) }
 
-npattern: 
+
+n_pattern: 
+
 | LPAREN; v = IDENTIFIER; COLON; t = IDENTIFIER; RPAREN { DeclPattern(v, t) }
 | LPAREN; v = IDENTIFIER; RPAREN { VarRefPattern(v) }
+
+
+delete_pattern:
+
+| w = separated_list(COMMA, IDENTIFIER) {DeleteNodes w}
+| x = separated_list(COMMA, rpattern) {DeleteRels x}
+
+attrib_assign_pattern:
+
+z = IDENTIFIER; DOT; attr = IDENTIFIER; EQ; exp = expr { (z, attr, exp) }
+
 
 
 /* Expressions */
@@ -68,6 +86,18 @@ primary_expr:
 /* TODO: to be completed */
 expr:
 | a = primary_expr { a }
+| expr1 = expr; ADD; expr2=expr {BinOp(BArith BAadd, expr1, expr2) }
+| expr1 = expr; SUB; expr2=expr {BinOp(BArith BAsub, expr1, expr2) }
+| expr1 = expr; MUL; expr2=expr {BinOp(BArith BAmul, expr1, expr2) }
+| expr1 = expr; DIV; expr2=expr {BinOp(BArith BAdiv, expr1, expr2) }
+| expr1 = expr; MOD; expr2=expr {BinOp(BArith BAmod, expr1, expr2) }
+| expr1 = expr; EQ; expr2=expr {BinOp(BCompar BCeq, expr1, expr2) }
+| expr1 = expr; GE; expr2=expr {BinOp(BCompar BCge, expr1, expr2) }
+| expr1 = expr; GT; expr2=expr {BinOp(BCompar BCgt, expr1, expr2) }
+| expr1 = expr; LT; expr2=expr {BinOp(BCompar BClt, expr1, expr2) }
+| expr1 = expr; NE; expr2=expr {BinOp(BCompar BCne, expr1, expr2) }
+| expr1 = expr; BLAND; expr2=expr {BinOp(BLogic BLand, expr1, expr2) }
+| expr1 = expr; BLOR; expr2=expr {BinOp(BLogic BLor, expr1, expr2) }
 
 
 /* Types */

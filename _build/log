@@ -1,0 +1,6 @@
+# dune runtest
+# OCAMLPARAM: unset
+# Workspace root: "/home/thibault/Documents/projet tdp/ProjetTDP"
+$ /usr/bin/nproc > /tmp/duneceae59.output 2> /dev/null
+# Auto-detected concurrency: 8
+# disable binary cache

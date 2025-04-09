@@ -1,0 +1,6 @@
+# dune init project ProjetTDP
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /home/thibault/.cache/dune/db
+# Workspace root: "/home/thibault/Documents/projet tdp/ProjetTDP/ProjetTDP"
+# Auto-detected concurrency: 8
