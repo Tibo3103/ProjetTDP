@@ -38,11 +38,11 @@ let rec normalize_pattern act = function
 let normalize_clause = function
   | Create pats -> List.concat_map (fun p -> snd (normalize_pattern CreateAct p)) pats
   | Match pats -> List.concat_map (fun p -> snd (normalize_pattern MatchAct p)) pats
-  | Delete (DeleteNodes vars) -> List.map (fun v -> IDeleteNode v) vars
   | Delete (DeleteRels rels) -> List.map (fun (v1, lab, v2) -> IDeleteRel(v1, lab, v2)) rels
-  | Return vars -> [IReturn vars]
+  | Delete (DeleteNodes vars) -> List.map (fun v -> IDeleteNode v) vars
   | Set assigns -> List.map (fun (var, attr, e) -> ISet(var, attr, e)) assigns
   | Where cond -> [IWhere cond]
+  | Return vars -> [IReturn vars]
 
 let normalize_query (Query cls) = NormQuery (List.concat_map normalize_clause cls)
 
